@@ -1,0 +1,53 @@
+**********************Ass1********************
+create database storefront;
+use storefront;
+create table product(p_id int primary key,p_name varchar(30),stock int);
+create table category(cat_id int primary key,cat_name varchar(30),price int,p_id int,foreign key(p_id) references product(p_id));
+drop table category;
+create table category(cat_id int primary key,cat_name varchar(30),price int,p_id int,Constraint FK_pid foreign key(p_id) references product(p_id));
+drop table product;
+alter table category drop foreign key FK_pid;
+drop table product;
+alter table category add Constraint FK_pid foreign key(p_id) references product(p_id);
+create table users(u_id int primary key,name varchar(20),contact int,email varchar(40),address varchar(50));
+create table Image(image_id int primary key,p_id int,foreign key(p_id) references product(p_id),image_file blob);
+create table orders(o_id int primary key,u_id int,foreign key(u_id) references users(u_id),amt int,time Datetime);
+create table payment(pay_id int primary key,type varchar(20),o_id int,foreign key(o_id) references orders(o_id),u_id int,foreign key(u_id) references users(u_id));
+insert into users(u_id,name,contact,email,address) values (1,"Mohit",123456789,"mohit.chhajer@metacube.com","166 Adarsh Nagar"),(2,"Aditya",987654321,"aditya@gmail.com","PL/12 Arihant Nagar"),(3,"Ganpat",54678901,"ganpat11@gamil.com","A block Mahavir Nagar");
+insert into product(p_id,p_name,stock) values (1,"Jeans",30),(2,"Mobile",60),(3,"Laptop",40),(4,"Shirt",20);
+alter table category add column description varchar(100);
+insert into category(cat_id,cat_name,price,p_id,description) values (1,"VeroJeans",2300,1,"Skitfit"),(2,"SamsungMobile",16500,2,"S-21"),(3,"Acer",75000,3,"Aspire"),(4,"USPolo",2100,4,"MSeries");
+insert into orders(o_id,u_id,amt,time) values (1,1,4600,'18-03-21 11:12:15');
+insert into orders(o_id,u_id,amt,time) values (2,1,4600,'23-03-21 09:45:00'),(3,2,78000,'20-02-21 10:12:11'),(4,2,100000,'25-01-21 19:13:00'),(5,3,1235000,'20-02-21 18:47:10'),(6,2,7800,'20-02-21 09:56:10');
+insert into payment(pay_id,type,o_id,u_id) values (1,"Cash",2,1),(2,"Debit Card",1,1);
+select c.cat_name,p.p_name from product p inner join category c on p.p_id=c.cat_id;
+alter table product add column createtime timestamp;
+alter table product add column active int check(active in(1,0));
+select * from product;
+update product set active=1 where p_id =1;
+update product set active=1 where p_id =2;
+update product set active=1 where p_id=3;
+update product set active=0 where p_id=4;
+update product set createtime='2021-03-21 19:45:21' where p_id=1;
+
+************************Ass2***********************************
+select c.cat_name,p.p_name,p.createtime from product p inner join category c on p.p_id=c.cat_id where p.active=1 order by p.createtime Desc;
+insert into Image(image_id,p_id,image_file) values (1,1,'C:\Users\mohit.chhajer_metacu\workspace\Test\src\com\metacube\Jeans.png');
+insert into Image(image_id,p_id,image_file) values (2,2,'C:\Users\mohit.chhajer_metacu\workspace\Test\src\com\metacube\Mobile.png'),(3,3,'C:\Users\mohit.chhajer_metacu\workspace\Test\src\com\metacube\Laptop.png');
+select * from product where p_id not in(select p_id from Image);
+select c.price,p.p_name,c.cat_name,p.createtime from product p inner join category c on c.p_id=p.p_id where p.active=1 order by p.createtime desc;
+select c.cat_id,c.cat_name,p.cat_name as Parent from category c left join category p on c.p_id=p.p_id where c.cat_id not in(select distinct p_id from category);
+select cat_id,cat_name,price from category where cat_id=(Select p_id from product where p_name='Mobile');
+select cat_id,cat_name,price from category where cat_id in(select p_id from product where stock<50);
+
+*************************Ass3*******************************
+select * from orders order by Time limit 50;
+select * from orders order by amt limit 10;
+select datediff(now(),o.time) as diff,o.* from orders o having diff>10;
+select * from product;
+select now();
+select time from orders;
+alter table orders add column status varchar(10);
+update orders set status='shipped' where o_id=1;
+select status from orders where o_id=1;
+select c.cat_name,o.time from category c,orders o where c.price>20 and c.price<5000;
