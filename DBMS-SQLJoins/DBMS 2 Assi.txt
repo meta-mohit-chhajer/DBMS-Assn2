@@ -2,8 +2,6 @@
 create database storefront;
 use storefront;
 create table product(p_id int primary key,p_name varchar(30),stock int);
-create table category(cat_id int primary key,cat_name varchar(30),price int,p_id int,foreign key(p_id) references product(p_id));
-drop table category;
 create table category(cat_id int primary key,cat_name varchar(30),price int,p_id int,Constraint FK_pid foreign key(p_id) references product(p_id));
 drop table product;
 alter table category drop foreign key FK_pid;
