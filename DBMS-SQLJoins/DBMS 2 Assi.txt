@@ -11,6 +11,8 @@ create table users(u_id int primary key,name varchar(20),contact int,email varch
 create table Image(image_id int primary key,p_id int,foreign key(p_id) references product(p_id),image_file blob);
 create table orders(o_id int primary key,u_id int,foreign key(u_id) references users(u_id),amt int,time Datetime);
 create table payment(pay_id int primary key,type varchar(20),o_id int,foreign key(o_id) references orders(o_id),u_id int,foreign key(u_id) references users(u_id));
+
+show tables;
 insert into users(u_id,name,contact,email,address) values (1,"Mohit",123456789,"mohit.chhajer@metacube.com","166 Adarsh Nagar"),(2,"Aditya",987654321,"aditya@gmail.com","PL/12 Arihant Nagar"),(3,"Ganpat",54678901,"ganpat11@gamil.com","A block Mahavir Nagar");
 insert into product(p_id,p_name,stock) values (1,"Jeans",30),(2,"Mobile",60),(3,"Laptop",40),(4,"Shirt",20);
 alter table category add column description varchar(100);
